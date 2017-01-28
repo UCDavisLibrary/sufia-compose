@@ -14,13 +14,10 @@ There are four Docker related files here:
 
 ### Setup
 
-_If you do not have Docker (and Compose) set up, read [below](#basic-docker-installation-osx)._
-
-_Also, these examples use the `dc` alias for `docker-compose`. See
-below for more [shell helpers](#shell-helpers)._
+_Also, these examples use the `dc` alias for `docker-compose`
 
 Ordinary usage will amount to starting the app and services with
-`docker-compose up`, but there a couple of setup steps for the first run. Because
+`dc up`, but there a couple of setup steps for the first run. Because
 the `web` service needs Bundler to have installed the required gems, it is easiest
 to build the image first, then run Bundler, then start up. The web image is the
 only one that needs to be built, while the others will simply be pulled.
@@ -31,20 +28,20 @@ dc run web bundle install
 dc up web
 ```
 
-By running `docker-compose up web`, the dependent services will be started, but
+By running `dc up web`, the dependent services will be started, but
 not stopped when you exit the web container. This is usually the most effective
 pattern since occasional `rails server` restarts are needed, but the other
 services can continue. With a bare `docker-compose up`, all the logs will be
 collated to your shell and all services stopped upon Control-C (both unseemly
 for typical development).
 
-There are two other setup components required. The database must be set up and
-the Solr core must be created. These are straightforward, but must be run
-differently. The database setup is a usual rake task, run in the web image (a
-new, throwaway container is fine).
+Your system is connected, but still not setup. There are two other setup
+components required. The database must be set up and the Solr core must be
+created. These are straightforward, but must be run differently. The database
+setup is a usual rake task, run in the web image.
 
 ```
-dc run web rake db:create db:migrate
+dc run web bin/rake db:create db:migrate
 ```
 
 The Solr core must be run in the existing container because the `bin/solr`
@@ -187,4 +184,3 @@ The main two helpers are the aliases `dm` and `dc`, for `docker-machine` and
 `docker-compose`, respectively. These are the most commonly used commands and
 also the least wrist- and tab-completion-friendly, so the short aliases are a
 large quality of life improvement with no magic to them.
-
